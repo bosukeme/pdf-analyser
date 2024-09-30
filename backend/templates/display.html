@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extracted Data</title>
+</head>
+<body>
+    <h2>Extracted Data for {{ data.email }}</h2>
+    <p><strong>Nouns:</strong> {{ data.extracted_nouns|join:", " }}</p>
+    <p><strong>Verbs:</strong> {{ data.extracted_verbs|join:", " }}</p>
+    <a href="/pdf/upload/">Upload another PDF</a>
+</body>
+</html>

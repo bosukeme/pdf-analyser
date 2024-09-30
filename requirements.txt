@@ -1,0 +1,7 @@
+Django==5.1.1
+django-cors-headers==4.3.1
+mongoengine==0.29.1
+nltk==3.8.1
+pypdf==5.0.1
+python-dotenv==0.16.0
+gunicorn==23.0.0
