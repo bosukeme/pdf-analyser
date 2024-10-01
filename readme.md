@@ -6,10 +6,9 @@
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-  - [Create Docker Network](#create-docker-network)
-  - [Start RabbitMq Service](#start-rabbitmq-service)
-  - [Setting Up frontend](#setting-up-frontend)
-  - [Setting Up backend](#setting-up-backend)
+  - [Running Docker](#running-docker)
+  - [Running Locally](#start-rabbitmq-service)
+  - [Testing](#testing)
   
 - [Contributing](#contributing)
 - [License](#license)
@@ -77,10 +76,10 @@ cd pdf-analyser
 
 Before you start the application, you need to set up an environment variables. Here's how you can do it:
 
-- Create a file called `.env` file at the backend root folder with the environment variables in the `.env.sample` file
+- Create a file called `.env` file at the root folder with the environment variables in the `.env.sample` file
 
 
-### Run docker
+### Running Docker
 
 navigate to the root directory
 
@@ -90,7 +89,7 @@ docker-compose up --build
 
 ### visit 
 ```bash
-http://localhost:8000/pdf/upload/
+http://localhost:8000/
 ```
 
 To stop the containers
@@ -99,16 +98,26 @@ To stop the containers
 docker-compose stop
 ```
 
+### Running locally
+
+navigate to the root directory
+
+```bash
+python manage.py runserver
+```
+
+### visit 
+```bash
+http://localhost:8000/
+```
+
 
 
 ### Testing
 
-```bash
-docker exec -it pdfproject bash
-```
 
 ```bash
-python manage.py test
+python manage.py backend.tests
 
 ```
 

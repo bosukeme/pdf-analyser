@@ -94,6 +94,5 @@ class PDFUploadTests(TestCase):
         })
 
         self.assertNotEqual(response.status_code, 302)
-        # self.assertFormError(response, 'form', 'email', 'Enter a valid email address.')
         self.assertIn('Enter a valid email address.', response.content.decode())
 
