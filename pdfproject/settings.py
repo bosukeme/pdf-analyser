@@ -1,5 +1,6 @@
 
 import os
+import sys
 from pathlib import Path
 from mongoengine import connect
 from dotenv import load_dotenv
@@ -12,8 +13,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.environ.get("DEBUG")
 
-# ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = [".vercel.app"]
+ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = [".vercel.app"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -57,55 +58,29 @@ TEMPLATES = [
 WSGI_APPLICATION = "pdfproject.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
+if TESTING:
+    # from .test_settings import *
+    from .test_settings import DATABASES, connection_uri  # noqa: F401
 
-DATABASES = {}
-
-
-MONGODB_SETTINGS = {
-    'db': os.environ.get("DBNAME"),
-    'host': os.environ.get("DBHOST"),
-    'username': os.environ.get("DBUSERNAME"),
-    'password': os.environ.get("DBPASSWORD"),
-    'port': os.environ.get("DBPORT"),
-    'authentication_source': 'admin',
-    'use_srv': os.environ.get("DB_USE_SRV"),
-    'retryWrites': True,
-    'ssl': True,
-}
-
-if MONGODB_SETTINGS.get('use_srv', False):
-    # For MongoDB Atlas or srv connection (use +srv)
-    connection_uri = (
-            f"mongodb+srv://{MONGODB_SETTINGS['username']}:"
-            f"{MONGODB_SETTINGS['password']}@"
-            f"{MONGODB_SETTINGS['host']}/"
-            f"{MONGODB_SETTINGS['db']}?retryWrites=true&w=majority"
-        )
 else:
-    # For direct connections (use normal mongodb://)
-    connection_uri = (
-        f"mongodb://{MONGODB_SETTINGS['username']}:"
-        f"{MONGODB_SETTINGS['password']}@"
-        f"{MONGODB_SETTINGS['host']}:{MONGODB_SETTINGS['port']}/"
-        f"{MONGODB_SETTINGS['db']}"
-    )
+    connection_uri = os.environ.get("MONGO_URI")
 
-# Connect to MongoDB
-connect(
-    db=MONGODB_SETTINGS['db'],
-    host=connection_uri,
-    ssl=MONGODB_SETTINGS.get('ssl'),
-    retryWrites=MONGODB_SETTINGS.get('retryWrites'),
-)
+    if 'test' in sys.argv:
+        connect(
+            db="test_database",
+            host=connection_uri,
+            ssl=True,
+            retryWrites=True,
+        )
+    else:
+        connect(
+            db=os.environ.get('DBNAME'),
+            host=connection_uri,
+            ssl=True,
+            retryWrites=True,
+        )
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -135,3 +110,5 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+TEST_RUNNER = 'backend.tests.test_runner.MongoTestRunner'
