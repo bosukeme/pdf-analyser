@@ -6,9 +6,9 @@ from django.shortcuts import render, redirect
 from .forms import PDFUploadForm
 from .models import PDFData
 
-# Download necessary resources for nltk
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
+nltk.data.path.append('/tmp')
+nltk.download('punkt', download_dir='/tmp')
+nltk.download('averaged_perceptron_tagger', download_dir='/tmp')
 
 
 def extract_nouns_and_verbs(text):
@@ -76,3 +76,7 @@ def upload_pdf(request):
 def display_data(request, email):
     data = PDFData.objects.get(email=email)
     return render(request, 'display.html', {'data': data})
+
+
+def home(request):
+    return render(request, 'index.html')
